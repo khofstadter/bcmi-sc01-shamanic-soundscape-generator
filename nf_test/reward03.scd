@@ -1,3 +1,12 @@
+/*
+what is this?
+
+TODO
+- all counters could be mapped to the soundscape;
+- add new variable to decide when to move;
+*/
+
+
 ~reward= Routine(
 	~timer = [0,0,0,0];
 	~hiThetaEnergy = 10;

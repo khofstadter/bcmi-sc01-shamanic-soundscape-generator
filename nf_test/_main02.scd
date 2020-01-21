@@ -1,34 +1,27 @@
-/* todo:
-hardware:
-software:
-soundscape
-- look into auto threshold later;
-!- need to perhaps average the theta signal for 30s 1m for the 50-70% success;
-!- noise a bit too laud - maybe OK to be noise at the very beginning to clear the ears, later perhaps it should be less noisy;
-- ask participant to focus on the drumming and nothing else (I don't know whether to tell them that this is neuro-feeback as than they might try too hard!)
-!- perhaps that 30s/1m averaged signal could be used to give some feedback as welll
-!- timethreshold is probably fine to keep;
-!- other counters should be used to give minimal feedback as well;
-ok.
-// last leven should stay for longer (something wrong with (~currentDepth < ~forest.size).if {
-// refine Ndef code, they don't have the same sytax, how to add one reverb to all?
-// add max ~currentDepth - perhaps needs to be inline with levelNb;
-// add 	~hiThetaEnergy = 10; ~timeThreshold = 10; to forest Function as value;
-// add new variable to decide when to move;
-// remove change from all synths (ndef2,100,0.04,2600];
-// make mixer: perhaps only two outs: drums, forest
-// switch off audio input;
-// forest add breating guide wave: first faster in & out synced to paradiddle, later slower breathing, encourage the space between;
-// make fade is swooshy sound (fades in with end on first beat,100,0.04,2600];
-// make ten stages;
-// make timer that moves up and down in the 10 stages;
-// make a timer that counts the whole things?
+/*
+# bcmi-soundscape-01
+## nf_test
+### main
+
+
+~pathway++"/../sounds/0/0";
+
+TODO:
+- check max ~currentDepth, it might need to be inline with levelNb;
+- ~hiThetaEnergy = 10; ~timeThreshold = 10; to forest Function as value;
+- would ten stages be enough?
+- make timer that can move between stages;
+- add a timer for the whole session - or is this not necessary as the raw file already saves 256 samples per sec?
 */
 
+// 1. read EEG data
+// use'openbci_gui_fftplot_with_neurofeedback-2ch.scd'
+
+// 2. load tools for soundscape
 (
 Server.killAll;
 s.options.numOutputBusChannels= 2;
-s.options.numInputBusChannels= 0;
+s.options.numInputBusChannels= 0; //no need for audio input;
 s.reboot;
 s.meter;
 s.waitForBoot {
@@ -36,7 +29,7 @@ s.waitForBoot {
 	(~pathway++"/ndefs03.scd").load;
 	(~pathway++"/shaman02.scd").load;
 	(~pathway++"/forest04.scd").load;
-	(~pathway++"/reward02.scd").load;
+	(~pathway++"/reward03.scd").load;
 	// start a new tempoClock
 	// cannot rely on default tempoClock in the background
 	t= TempoClock.new(4,16);
@@ -45,33 +38,27 @@ s.waitForBoot {
 //NdefMixer(s);
 )
 
-// read eeg data or
-//~energyTheta= 16; //if no eeg is measured
-//~hiThetaEnergy= 19; //set theta threshold
-
-
+// 3. record raw and extra EEG data and start the soundscape
 (
 //start recording eeg and extra data:
 var recorder= DataRecord(~openbci);
 recorder.extra=[~energyTheta,~hiThetaEnergy,~currentForestDepth,~timer];
 ~rec= recorder.start;
 
-// just forest, no shaman
+// start the soundscape by moving into the first layer of the forest (just forest sounds, no shaman sounds)
 ~forestDepth2.valueArray(~forest[0]);//no drumming;
 ~reward.play;
 )
-
+)
 
 // is file saved with extra?
-~rec.path.openOS;  //open file we just recorded in text editor
+//~rec.path.openOS;  //open file we just recorded in text editor
 
 //adjust threshold manually:
-~hiThetaEnergy= 1.5;
-
-
-//schedule the movements in the forest:
+~hiThetaEnergy= 1.0;
 
 (
+// enter a deper level:
 
 var schedCurve= [ 0, 4, 8, 16, 32, 64, 128, 256, 512, 700, 850, 1000, 1200, 1400, 1600, 1700 ];
 //var schedCurve= Array.exprand((~forest.size)-3, 1, 1800).round.sort;
@@ -98,8 +85,30 @@ SystemClock.sched(1820,{
 	~timer = [0,0,0,0];});//reset - perhaps better to write something more distinct in here?
 )
 
-// when music finished, wait for a few minutes.
+// after music finished, wait for a few minutes to record more EEG;
 
-// CMD + .= stop recording, and reading;
+// 'CMD + .' to stop recording file and reading EEG;
 // questionaire + drawing;
-// swith EEG off
+// swith EEG off, take cap off;
+
+
+
+/* Creating random scheduling times for the levels (forestDepths):
+by f.olofsson
+
+// this can also help make the soundscape sound always a tiny bit different to previous sessions if needed;
+
+//here 1.5 is exponent
+Array.geom(16, 1, 1.5).normalize(0, 1800).plot
+
+//with some randomness added...
+(Array.geom(16, 1, 1.5).normalize(0, 1800)+{0.gauss(50)}.dup(16)).plot
+
+//or, more advanced, scale randomness depending on position in the curve
+(Array.geom(16, 1, 1.5).normalize(0, 1800)+{|i| 0.gauss(i.linlin(15, 0, 100, 1))}.dup(16)).plot
+
+
+((0..1799).collect{|x| x.linexp(0, 1799, 1, 1800)+0.gauss(10)}).plot
+
+({|i| 2**i/16}.dup(16).normalize(0, 1)).plot
+*/

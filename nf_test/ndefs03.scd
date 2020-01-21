@@ -1,15 +1,27 @@
+/*
+// what is this?
+
+TODO:
+- would be good to have a breathing guide sound (first faster in & out synced to paradiddle, later slower breathing, encourage the space between or like Wim Hof style);
+- how to group Ndefs to add reverb to a set of sounds only?
+- maybe make mixer: perhaps only two outs: drums, forest;
+- adjust vol. levels (mix);
+- last leven should stay for longer (something not accurate with '(~currentDepth < ~forest.size).if { ...';
+- remove change from all synths (ndef2,100,0.04,2600];
+*/
+
 ~sampleBufs = [[List.newClear(0), List.newClear(0)],[List.newClear(0), List.newClear(0)],[List.newClear(0), List.newClear(0)]];
-	PathName("/Users/khofstadter/Dropbox/PhD/Focus2019/focus_2.1/sounds/0/0").files.do{arg file;
+PathName(~pathway++"/../sounds/0/0").files.do{arg file;
 		~sampleBufs[0][0].add(Buffer.read(s, file.fullPath));};
-	PathName("/Users/khofstadter/Dropbox/PhD/Focus2019/focus_2.1/sounds/0/1").files.do{arg file;
+	PathName(~pathway++"/../sounds/0/1").files.do{arg file;
 		~sampleBufs[0][1].add(Buffer.read(s, file.fullPath));};
-	PathName("/Users/khofstadter/Dropbox/PhD/Focus2019/focus_2.1/sounds/1/0").files.do{arg file;
+	PathName(~pathway++"/../sounds/1/0").files.do{arg file;
 		~sampleBufs[1][0].add(Buffer.read(s, file.fullPath));};
-	PathName("/Users/khofstadter/Dropbox/PhD/Focus2019/focus_2.1/sounds/1/1").files.do{arg file;
+	PathName(~pathway++"/../sounds/1/1").files.do{arg file;
 		~sampleBufs[1][1].add(Buffer.read(s, file.fullPath));};
-	PathName("/Users/khofstadter/Dropbox/PhD/Focus2019/focus_2.1/sounds/2/0").files.do{arg file;
+	PathName(~pathway++"/../sounds/2/0").files.do{arg file;
 		~sampleBufs[2][0].add(Buffer.read(s, file.fullPath));};
-	PathName("/Users/khofstadter/Dropbox/PhD/Focus2019/focus_2.1/sounds/2/1").files.do{arg file;
+	PathName(~pathway++"/../sounds/2/1").files.do{arg file;
 		~sampleBufs[2][1].add(Buffer.read(s, file.fullPath));};
 
 // frame drum fingers
