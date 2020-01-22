@@ -3,15 +3,32 @@
 ## nf_test
 ### main
 
-
-~pathway++"/../sounds/0/0";
-
 TODO:
 - check max ~currentDepth, it might need to be inline with levelNb;
 - ~hiThetaEnergy = 10; ~timeThreshold = 10; to forest Function as value;
 - would ten stages be enough?
 - make timer that can move between stages;
 - add a timer for the whole session - or is this not necessary as the raw file already saves 256 samples per sec?
+
+### SESSION AGENDA
+before session
+- is there enough space on the hdd?
+- is wifi/dropbox off;
+
+session:
+- participant fills in top of questionnaire (I start preparing EEG cap with wet electrodes)
+- prep iPhone (airplane mode, silent, wifi-BLU off, auto lock: never, lock iPhone camera screen)
+- start up Screenflow (don't start recording)
+- all audio to 48k
+- start screen-recording [configure] iphone + internal mic, computer audio, screen
+- check timeseries and impedance - adjust impedance, close this file
+- start neurofeedback example with 8 channels, reduce 50hz noise, show only bandwidths signal [No Data]
+- start _main
+- start reward play with forest 0 (no drumming)
+	+ DataRecord
+- check that extra is saved in text file;
+- manually adjust threshold for theta/gamma
+- schedule all cues;
 */
 
 // 1. read EEG data
@@ -59,9 +76,8 @@ recorder.extra=[~energyTheta,~hiThetaEnergy,~currentForestDepth,~timer];
 
 (
 // enter a deper level:
-
-var schedCurve= [ 0, 4, 8, 16, 32, 64, 128, 256, 512, 700, 850, 1000, 1200, 1400, 1600, 1700 ];
-//var schedCurve= Array.exprand((~forest.size)-3, 1, 1800).round.sort;
+//var schedCurve= [ 0, 4, 8, 16, 32, 64, 128, 256, 512, 700, 850, 1000, 1200, 1400, 1600, 1700 ];
+var schedCurve= Array.exprand((~forest.size)-3, 1, 1800).round.sort;
 // -> [ 1.0, 2.0, 4.0, 9.0, 101.0, 133.0, 173.0, 225.0, 287.0, 526.0, 550.0, 877.0, 1163.0, 1507.0, 1521.0, 1656.0 ]
 
 SystemClock.sched(schedCurve[0],{ ~forestDepth2.valueArray(~forest[1]);});
@@ -88,8 +104,9 @@ SystemClock.sched(1820,{
 // after music finished, wait for a few minutes to record more EEG;
 
 // 'CMD + .' to stop recording file and reading EEG;
-// questionaire + drawing;
-// swith EEG off, take cap off;
+// questionaire + drawing (optional);
+// switch EEG off, take cap off;
+
 
 
 
@@ -106,7 +123,6 @@ Array.geom(16, 1, 1.5).normalize(0, 1800).plot
 
 //or, more advanced, scale randomness depending on position in the curve
 (Array.geom(16, 1, 1.5).normalize(0, 1800)+{|i| 0.gauss(i.linlin(15, 0, 100, 1))}.dup(16)).plot
-
 
 ((0..1799).collect{|x| x.linexp(0, 1799, 1, 1800)+0.gauss(10)}).plot
 

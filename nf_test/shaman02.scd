@@ -1,9 +1,9 @@
-//todo
-//have new type of if's
+/*TODO
+- have new type of if's
+- try withouth Bjorklund dependency;
+*/
 
 //shaman
-
-
 ~pan= 0.1; //stereo width
 
 //generate ~notes for the shaman to play

@@ -1,6 +1,4 @@
 /*
-// what is this?
-
 TODO:
 - would be good to have a breathing guide sound (first faster in & out synced to paradiddle, later slower breathing, encourage the space between or like Wim Hof style);
 - how to group Ndefs to add reverb to a set of sounds only?

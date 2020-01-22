@@ -1,59 +1,57 @@
-// ! forest05 was changed to forest06 because there was an issue with the level numbers being saved in the raw file - this not needs to be manually changed in a text editor: change 16 to 15;
+/*
+# bcmi-soundscape-01
+## performance_01
+### main
+TODO:
+-
+
+----------------
+ SESSION AGENDA
+-------------------
+in sc
+- adjust volume
+- test 4 speakers with sinwaves (performance code is 1243 instead of 1234)
+
+1h BEFORE PRESENTATION:
+- no screensaver;
+- bluetooth,dropbox off (wifi on for presentation)
+- system pref: ultralight as audio in/out
+- audio sampling rate: 48k (set all in/out)
+- motu app: 1in + out (with sm57 setting)
+- change batteries in OpenBCI and test connection
 
 
-// -------------------
-// PREP
-// -------------------
-// in sc:
-// LOWER VOLUME:
-// test 4 speakers with sinwaves
-// (performance code is 1243 instead of 1234)
+30min BEFORE PRESENTATION:
+- put on wet cap and test impedance
 
-// 1h BEFORE PRESENTATION:
-// no screensaver;
-// bluetooth,dropbox off (wifi on for presentation)
-// system pref: ultralight as audio in/out
-// audio sampling rate: 48k (set all in/out)
-// motu app: 1in + out (with sm57 setting)
+PRESENTATION (50 min)
+- adjust lights in the room
+- turn on recording on camera + phone + h1 zoom
 
-// change batteries in OpenBCI - test
-
-
-// 30min BEFORE PRESENTATION:
-// put on cap and test impedance;
-
-
-// PRESENTATION
-// lights?
-// camera + phone + h1 recording;
-
-// 1. TALKING
-// questions with orientation page + ?
-// one soundscape: shamanic journeying
-// explain one test with mama (youtube)
-// what is different between the tests and this performance?
-// there is not much gaming element to this performance - why?
-// 15 / 30 minutes;
-// how shall you listen today?
-// listen to the digital shamans (drums annd chakapa) or my live drumming or the other sounds, watch the screen or not?
-// how much would you like me to explain before the performance - maybe later?
-// I would listen to the static/monotone elements the digital shaman (drumming from the speakers)
-// eyes closed
-// no intent - no journey :)
-// we can draw after the 15 minutes;
+1. TALKING (20 min)
+- questions with orientation page
+- one soundscape: shamanic journeying
+- explain one test with mama (youtube)
+- what is different between the tests and this performance?
+- there is not much gaming element to this performance - why?
+- 15 or 30 minutes
+- how shall you listen today? Suggestion: listen to the digital shamans (drums annd chakapa) or my live drumming or the other sounds, watch or do not watch the screen
+- how much would you like me to explain about the mapping before the performance, maybe afte is better.
+- listen to the static/monotone elements the digital shaman (drumming from the speakers)
+- eyes open/closed
+- no intent - no journey :)
+- we can draw after the 15 minutes;
 
 
+2.PERFORMANCE (15 min)
+- turn wifi off;
+1. screenrecord (screen and internal mic only)
+2. with timeseries, check impedance
+3. read EEG (with fft plot + nf with coherance)
 
+adjust supercollider audio to -3.1
 
-//  2.PERFORMANCE (15 min)
-// - wifi off;
-// 1. screenrecord (screen and internal mic only)
-// 2. timeseries, check impedance (seperate file)
-// 3. read EEG (with fft plot + nf with coherance)
-
-
-// supercollider audio -3.1
-
+*/
 
 
 //-----------------------------

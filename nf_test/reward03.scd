@@ -1,11 +1,12 @@
 /*
-what is this?
-
 TODO
 - all counters could be mapped to the soundscape;
 - add new variable to decide when to move;
+- other rewards to consider:
+- - signal hits threshold;
+- - signal is above threshold;
+- - signal was above threshold for a set amount of time;
 */
-
 
 ~reward= Routine(
 	~timer = [0,0,0,0];
@@ -62,22 +63,3 @@ TODO
 		};*/
 
 		1.wait}});
-
-
-
-/*
-thoughtless awareness
-> effortless awareness
-> choiceless awareness
-> experiential focus
-
->> increase fmTheta (FZ; ACC)
->> decrease Gamma (PZ, PCC)
-
-use local variables above ifs or global (probably local, one order higher);
-1. caculate what is 50% success, set threshold to that manually/automatically;
-2. rewards types:
-2.1. signal hits threshold;
-2.2. signal is above threshold;
-2.3. signal was above threshold for a set amount of time;
-*/

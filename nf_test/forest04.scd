@@ -1,10 +1,9 @@
 /*
-todo:
-how to play 3 ndefs together, needs grouping?
-could we have one general function with more arguments?
-if bjork0 - add 0 to notes as well
+TODO:
+- how to play 3 ndefs together, needs grouping?
+- could we have one general function with more arguments?
+- if bjork0 - add 0 to notes as well;
 */
-
 
 ~forest = nil ! 17;
 //bps,bpb,bjorkdum,bjorkaccent,enterfreq,enteramp,windlpf
@@ -52,7 +51,6 @@ if bjork0 - add 0 to notes as well
 		Ndef(\theta).play;
 	};
 };
-
 
 ~forestFlow= nil ! 18;
 ~currentForestFlowDepth= 0;
