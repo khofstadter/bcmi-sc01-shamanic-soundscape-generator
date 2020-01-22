@@ -1,10 +1,7 @@
-/*
-todo:
-how to play 3 ndefs together, needs grouping?
-could we have one general function with more arguments?
-if bjork0 - add 0 to notes as well
-*/
 
+// TODO how to play 3 ndefs together, needs grouping?
+// TODO could we have one general function with more arguments?
+// TODO if bjork0 - add 0 to notes as well
 
 ~forest = nil ! 17;
 //depth,bps,bpb,bjorkdum,bjorkaccent,shamanvol,windlpf
@@ -23,16 +20,14 @@ if bjork0 - add 0 to notes as well
 ~forest[12] = [12,4.7,8,8,2,0.5,500];
 ~forest[13] = [13,4.6,8,8,4,0.5,300];
 ~forest[14] = [14,4.5,8,8,8,0.5,200]; //last
-~forest[15] = [16,2,4,8,3,0.5,200]; //triplets
-~forest[16] = [17,2,4,8,3,0.0,200]; //stop
+~forest[15] = [15,2,4,8,3,0.5,200]; //triplets
+~forest[16] = [16,2,4,8,3,0.0,200]; //stop
 
 (
 ~forestDepth2 = { |depth,bps,bpb,bjorkdum,bjorkaccent,shamanvol,windlpf|
 	//reset time:
 	//nf settings:
 	~timer= [0,0,0,0];
-	//~hiThetaEnergy = 10;
-	//~timeThreshold = 10;
 	a= t.elapsedBeats.postln;
 	b= t.nextBar.postln;
 	c= (b-a)*(1/bps); //beats from next bar * lenght of beats
@@ -51,7 +46,6 @@ if bjork0 - add 0 to notes as well
 			~shaman.value(bps,bpb);
 			//feedback
 			Ndef(\numbers).spawn([\buffer, ~numberBufs[(~currentForestDepth-17).abs], \amp, 0.4, \pan, 0]); //retrigger
-
 		};
 	}
 	)

@@ -1,13 +1,35 @@
-/*
-# bcmi-soundscape-01
-## performance_01
-### main
-TODO:
--
+//TODO better way to choose between 2 or 4 channels: perhaps two vars 1: [st~quad] 2: [test~perf] that changes all settings in all files?
+//TODO plotting with audio
+//TODO reduce nb of levels
+//TODO timer that can move between levels
+//TODO add timer that counts whole session?
 
-----------------
- SESSION AGENDA
--------------------
+/*
+--------------------
+PERSONAL TEST AGENDA
+--------------------
+1. before session
+- make space on hdd
+- switch wifi/dropbox/screensaver off
+- prep iPhone (airplane mode, silent, wifi-BLU off, auto lock: never, lock iPhone camera screen)
+
+2. session:
+- top of questionnaire while putting EEG cap on
+- start up Screenflow (don't start recording)
+- all audio to 48k in Audio Midi
+- start screen-recording [configure] iphone + internal mic, computer audio, screen
+- check timeseries and impedance - adjust impedance, close this file
+- start 'openbci_gui_fftplot_with_neurofeedback-2ch.scd', reduce 50hz noise, show only bandwidths signal
+- start
+- start reward play with forest 0 (no drumming)
+	+ DataRecord
+- check that extra is saved in text file
+- manually adjust threshold for theta/gamma
+- schedule all cues
+
+--------------------
+ PERFORMANCE AGENDA
+--------------------
 in sc
 - adjust volume
 - test 4 speakers with sinwaves (performance code is 1243 instead of 1234)
@@ -49,160 +71,102 @@ PRESENTATION (50 min)
 2. with timeseries, check impedance
 3. read EEG (with fft plot + nf with coherance)
 
-adjust supercollider audio to -3.1
+- adjust supercollider audio to -3.1
+- adjust file below between 2-4 ch and test or perf settings;
 
 */
 
+//-----------------------------
+//read FFT
+// - with coherence;
 
 //-----------------------------
-// phase sync
-(
-~cMatAmp= 0 ! 8 ! 8; //coherence matrix
-~syncArray= 0 ! 25; //instead of 250hz we will use the sample rate of the fft window, this means we are below tracking how phase syncronisation changes every second i.e. in a 1 second window;
-~syncArray2= 0 ! 25;
-~phaseSync1= 0;
-~phaseSync2= 0;
-//~coh1Arr= [0,0];
-//~coh1= 0;
-//~coh2= 0;
-r= Routine.run({inf.do{
-	~cMatAmp.size.do{ |i|
-		~bandEnergyAvg.size.do{ |x|
-			~cMatAmp[i][x]= (~bandEnergyAvg[i]-~bandEnergyAvg[x]);
-		}
-	};
-	~syncArray= ~syncArray.rotate(-1);
-	~syncArray2= ~syncArray2.rotate(-1);
-	//~coh1Arr= ~coh1Arr.rotate(-1);
-	~syncArray[~syncArray.size-1]= ~cMatAmp[6][7]; //P3 and P4 (left - right)
-	~syncArray2[~syncArray2.size-1]= ~cMatAmp[5][7]; //F4 and P4 (front - back)
-	~phaseSync1= ~syncArray.mean.round(0.01);
-	~phaseSync2= ~syncArray2.mean.round(0.01);
-	//~coh1Arr[~coh1Arr.size-1]= ~phaseSync1;
-	//~coh1= ~coh1Arr[0]-~coh1Arr[1];
-	//~coh2= ~coh2+~coh1;
-	0.04.wait; //same as 1/fps for the fft window
-	//~coh2.postln
-	//~phaseSync1.postln;
-	//~phaseSync2.postln;
-}});
-);
-
-//r.stop;
-
-
-
-//-----------------------------
-// main music files:
+//main music files:
 (
 Server.killAll;
-s.options.memSize = 2.pow(20); // for mome memory allocation
+s.options.memSize = 2.pow(20); //for mome memory allocation
 //s.options.memSize;
 s.options.numOutputBusChannels= 4;
-s.options.numInputBusChannels= 1;
+s.options.numInputBusChannels= 1; //0 if not performance;
 s.reboot;
 s.meter;
 s.waitForBoot {
 	~pathway= thisProcess.nowExecutingPath.dirname;
-	(~pathway++"/ndefs04.scd").load;
-	(~pathway++"/shaman02.scd").load;
-	(~pathway++"/forest06.scd").load;
-	(~pathway++"/reward04.scd").load;
-	// start a new tempoClock
-	// cannot rely on default tempoClock in the background
+	//(~pathway++"/ndefs-2ch-test.scd").load;
+	//(~pathway++"/ndefs-2ch-perf.scd").load;
+	(~pathway++"/ndefs-4ch-test.scd").load;
+	(~pathway++"/ndefs-4ch-perf.scd").load;
+	(~pathway++"/shaman.scd").load;
+	(~pathway++"/forest.scd").load;
+	(~pathway++"/reward.scd").load;
+	//start a new tempoClock
+	//cannot rely on default tempoClock in the background
 	t= TempoClock.new(4,16);
 };
 //s.plotTree;
 NdefMixer(s);
 )
 
-
-
-
-//-----------------------------
-// record 4 channels in sc;
-(
-r = Recorder(s);
-r.record(numChannels:4);
-)
-
-
-
-
 //-----------------------------
 //adjust computer volume to max
 
 
-
-
 //-----------------------------
-// record raw EEG and music data:
-// enter the forest
+//forest and record (only with EEG)
 (
-var recorder= DataRecord(~openbci);
-recorder.extra=[~hiBandEnergy,~bandEnergyAvg[0],~bandEnergyAvg[1],~bandEnergyAvg[2],~bandEnergyAvg[3],~bandEnergyAvg[4],~bandEnergyAvg[5],~bandEnergyAvg[6],~bandEnergyAvg[7],~phaseSync1,~phaseSync2,~currentForestDepth,~timer[0],~timer[1],~timer[2],~timer[3]];
-~rec= recorder.start;
-
-~forestDepth2.valueArray(~forest[0]);//no drumming;
+(
+// enter the forest
+~toThreshold= 1;
+~threshold= 2;
+~forestDepth2.valueArray(~forest[0]);//no drumming
 ~reward.play;
-//make instruments live:
-Ndef(\wind).play; //fade in wind;
+
+//make instruments live
+Ndef(\wind).play; //fade in wind
 Ndef(\wind2).fadeTime = 5;
 Ndef(\wind2).play; //environment wind
 Ndef(\theta).play; //chakapa;
 Ndef(\numbers).play; //voice
 Ndef(\0).play;Ndef(\1).play;Ndef(\2).play; //digital shaman
+);
+
+// if EEG is on do this:
+(
+//record raw EEG and extra data
+~recorder= DataRecord(~openbci);
+~toThreshold= ~bandEnergyAvg[0];
+~threshold= ~hiBandEnergy;
+~rec= ~recorder.start;
+
+r= Routine.run({inf.do{
+	~rec.extra= [~hiBandEnergy,~bandEnergyAvg[0],~bandEnergyAvg[1],~bandEnergyAvg[2],~bandEnergyAvg[3],~bandEnergyAvg[4],~bandEnergyAvg[5],~bandEnergyAvg[6],~bandEnergyAvg[7],~phaseCalcFuncVal,~currentForestDepth,~timer[0],~timer[1],~timer[2],~timer[3]]; //update DataRecord;
+	0.25.wait}});
+//r.stop;
+
+//record 4 audio channels in sc
+r = Recorder(s);
+//r.record(numChannels:2);
+r.record(numChannels:4);
+)
 )
 
 
-
-
+//-----------------------------
+// nf mappings
 
 //-----------------------------
-// additional live mic DSP"
-// mic with delay and grain;
-(
-Ndef(\live, {HPF.ar(Pan4.ar(SoundIn.ar, MouseX.kr(-1, 1), MouseY.kr(-1, 1)),50)});  //quad
-Ndef(\live).vol= 0;
-Ndef(\delay, {|decay= 7, delHz= 0.1, delMin= 0.05, delMax= 0.8|
-	var sig= Ndef.ar(\live);
-	HPF.ar(CombC.ar(sig, 0.5, SinOsc.kr(delHz*[1, 0.9, 0.8, 0.7]).exprange(delMin, delMax), decay),50);
-});
-Ndef(\delay).vol= 0.5;
-//grain
-(
-g.free; g= Buffer.alloc(s, 3*s.sampleRate);
-Ndef(\live2, {|t_trig= 0| HPF.ar(RecordBuf.ar(SoundIn.ar, g, loop:1, trigger: t_trig),50)}); //loop: 1 is live feed; loop: 0 is with capture;
-Ndef(\live2).vol= 1;
-//Ndef(\playback, {Pan2.ar(PlayBuf.ar(1, g, loop:1))}).play(vol:0.0);
-);
-(
-Ndef(\live2).set(\t_trig, 1); //run this line every time
-//then of course you can add more 'players' that read form the same buffer...
-Ndef(\grain, {|rate= 1.68, dur= 0.1, panlr=0, panfb=0|
-	LPF.ar(HPF.ar(Pan4.ar(
-		(TGrains.ar(1, Dust.kr(4), g, rate, LFNoise2.kr(0.1)+1/2, dur, 0, 3)), panlr, panfb)
-	,50),16000);
-});
-Ndef(\grain).vol= 0.4;
-);
-Ndef(\delay).play;
-Ndef(\grain).play;
-Ndef(\live2).play;
-//Ndef(\live).play;
-)
-
-
-
-
+//adjust threshold manually:
+~hiBandEnergy=  8.0; //for plot
+~threshold= 1.0; //for reward
 
 //-----------------------------
-// spatialise wind2 with phasesync1 (p3-p4) and phasesync2 (f4-p4)
+// spatialise wind2
 (
+~phaseCalcFuncVal= 0;
 (
 k= Routine.run({inf.do{
-	Ndef(\grain).set(\panlr, ~phaseSync1, \panfb, ~phaseSync2);
-	Ndef(\delay).set(\panlr, ~phaseSync1, \panfb, ~phaseSync2);
+	Ndef(\grain).set(\panlr, ~phaseCalcFuncVal, \panfb, ~phaseCalcFuncVal);
+	Ndef(\delay).set(\panlr, ~phaseCalcFuncVal, \panfb, ~phaseCalcFuncVal);
 	0.04.wait; //same as 1/fps for the fft window
 
 }});
@@ -210,10 +174,8 @@ k= Routine.run({inf.do{
 //k.stop;
 
 
-
 // spatialise chakapa
 (
-
 o= Routine.run({inf.do{ |i|
 	var p1 = [0,1,1,1,0,-1,-1,-1];
 	var p2 = [1,1,0,-1,-1,-1,0,1];
@@ -224,14 +186,6 @@ o= Routine.run({inf.do{ |i|
 );
 //o.stop;
 )
-
-
-
-
-//-----------------------------
-//adjust threshold manually:
-~hiBandEnergy=  1.5;
-
 
 
 
@@ -262,18 +216,22 @@ SystemClock.sched(schedCurve[13],{ ~forestDepth2.valueArray(~forest[14]);});
 SystemClock.sched(schedCurve[14],{
 	~forestDepth2.valueArray(~forest[15]);
 	SystemClock.sched(16,{
-	~forestDepth2.valueArray(~forest[16]); //stop drums, fade out wind;
-	~reward.stop;//stop
-	~timer = [0,0,0,0];});//reset - perhaps better to write something more distinct in here?
-}); //tripplets (triplets)
-
+		~forestDepth2.valueArray(~forest[16]); //stop drums, fade out wind;
+		~reward.stop;//stop
+		~timer = [0,0,0,0];});//reset - perhaps better to write something more distinct in here?
+});
 )
-
-
-
 
 //-----------------------------
 // 3. Q/A and drawing
 
 // limitless options for mapping eeg to sound - but it needs to be meaningful and in line with training;
 // explain timer variables that could be used for more gaming type of rewarding/changes;
+
+
+
+//-----------------------------
+// 4. plotting with audio
+//TODO: read raw text file from savedData folder (Audio Support)
+//TODO: read audio file from music/superCollider folder
+
