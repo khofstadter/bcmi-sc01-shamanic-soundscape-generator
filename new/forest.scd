@@ -3,7 +3,7 @@
 // TODO could we have one general function with more arguments?
 // TODO if bjork0 - add 0 to notes as well
 
-~forest = nil ! 17;
+~forest = 0 ! 17;
 //depth,bps,bpb,bjorkdum,bjorkaccent,shamanvol,windlpf
 ~forest[0] = [0,4,16,0,0,0.01,19000];
 ~forest[1] = [1,6.6,16,7,4,0.1,13000];

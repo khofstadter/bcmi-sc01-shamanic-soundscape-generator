@@ -1,5 +1,8 @@
-//TODO better way to choose between 2 or 4 channels: perhaps two vars 1: [st~quad] 2: [test~perf] that changes all settings in all files?
 //TODO plotting with audio
+- make a 10 min recording, audio and raw text;
+- try to plot;
+
+//TODO better way to choose between 2 or 4 channels: perhaps two vars 1: [st~quad] 2: [test~perf] that changes all settings in all files?
 //TODO reduce nb of levels
 //TODO timer that can move between levels
 //TODO add timer that counts whole session?
@@ -86,16 +89,16 @@ PRESENTATION (50 min)
 Server.killAll;
 s.options.memSize = 2.pow(20); //for mome memory allocation
 //s.options.memSize;
-s.options.numOutputBusChannels= 4;
-s.options.numInputBusChannels= 1; //0 if not performance;
+s.options.numOutputBusChannels= 2;
+s.options.numInputBusChannels= 0; //0 if not performance;
 s.reboot;
 s.meter;
 s.waitForBoot {
 	~pathway= thisProcess.nowExecutingPath.dirname;
-	//(~pathway++"/ndefs-2ch-test.scd").load;
+	(~pathway++"/ndefs-2ch-test.scd").load;
 	//(~pathway++"/ndefs-2ch-perf.scd").load;
-	(~pathway++"/ndefs-4ch-test.scd").load;
-	(~pathway++"/ndefs-4ch-perf.scd").load;
+	//(~pathway++"/ndefs-4ch-test.scd").load;
+	//(~pathway++"/ndefs-4ch-perf.scd").load;
 	(~pathway++"/shaman.scd").load;
 	(~pathway++"/forest.scd").load;
 	(~pathway++"/reward.scd").load;
@@ -145,8 +148,8 @@ r= Routine.run({inf.do{
 
 //record 4 audio channels in sc
 r = Recorder(s);
-//r.record(numChannels:2);
-r.record(numChannels:4);
+r.record(numChannels:2);
+//r.record(numChannels:4);
 )
 )
 
@@ -156,8 +159,7 @@ r.record(numChannels:4);
 
 //-----------------------------
 //adjust threshold manually:
-~hiBandEnergy=  8.0; //for plot
-~threshold= 1.0; //for reward
+~hiBandEnergy=  10.0; ~threshold= 10.0; //for plot and reward
 
 //-----------------------------
 // spatialise wind2
@@ -193,7 +195,8 @@ o= Routine.run({inf.do{ |i|
 //-----------------------------
 //schedule the movements in the forest:
 (
-var schedCurve= Array.geom(15, 1, 1.25).normalize(0, 900).asInt;
+var schedCurve= Array.geom(15, 1, 1.25).normalize(0, 600).asInt; //10 min
+//var schedCurve= Array.geom(15, 1, 1.25).normalize(0, 900).asInt;
 // Array.geom(15, 1, 1.25).normalize(0, 900); //15 min
 // Array.geom(15, 1, 1.25).normalize(0, 1200); //20 min
 //Array.geom(15, 1, 1.25).normalize(0, 1800).plot; //30 min

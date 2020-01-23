@@ -16,16 +16,21 @@ used function for extra data:
 
 recorder.extra=[~hiBandEnergy,~bandEnergyAvg[0],~bandEnergyAvg[1],~bandEnergyAvg[2],~bandEnergyAvg[3],~bandEnergyAvg[4],~bandEnergyAvg[5],~bandEnergyAvg[6],~bandEnergyAvg[7],~phaseSync1,~phaseSync2,~currentForestDepth,~timer[0],~timer[1],~timer[2],~timer[3]];
 
-#12 nfth (set below manualy in var 1.5)
-#13 ch1 theta median (FZ)
-#14 ch2 theta median (PZ)
-#15 ch3 theta median (FP1)
-...
-#20 ch8 theta median (P4)
-#21 ~phaseSync1 ?
-#22 ~phaseSync2 ?
-#23- Level Number (nil)
-#24- timer 1 (1)
+#0 index
+#1-9 ch1-ch8 raw data
+#10-12 accel
+#13 nfth (set below manualy in var 1.5)
+#14 ch1 theta median (FZ)
+#15 ch2 theta median (PZ)
+#16 ch3 theta median (FP1)
+#17 ch4
+#18 ch5
+#19 ch6
+#20 ch7
+#21 ch8 theta median (P4)
+#22 ~phaseCalcFuncVal ?
+#23- level
+#24- timer 1 (0)
 #25- timer 2 (0)
 #26- timer 3 (0)
 #27- timer 4 (0)
@@ -67,10 +72,9 @@ s.waitForBoot{
 	// CHANGE THIS:
 	// need to recompile sc in case new file is plotted
 	if(x.isKindOf(Array).not, {
-		x= CSVFileReader.read("~/Desktop/OpenBCI-RAW-2019-10-26_13-38-01_sc_last_level_changed_nfth_1.5.txt");
+		x= CSVFileReader.read("/Users/khofstadter/Library/Application Support/SuperCollider/downloaded-quarks/OpenBCI-SuperCollider/savedData/OpenBCI-RAW-2020-01-23_13-55-11_sc.txt");
 		6.do{x.removeAt(0)};
 	});
-
 
 	p= 0 ! (x.size/256) ! 16;
 
@@ -82,38 +86,37 @@ s.waitForBoot{
 	x.size.do{|i|
 		if (x[i][0] == "0",
 			{
-				p[0][a]= x[i][13].asFloat.min(limiter); //FZ theta median
-				p[1][a]= x[i][14].asFloat.min(limiter); //PZ theta median
-				p[2][a]= x[i][15].asFloat.min(limiter); //FP1 theta median
-				p[3][a]= x[i][16].asFloat.min(limiter); //FP2 theta median
-				p[4][a]= x[i][17].asFloat.min(limiter); //F3 theta median
-				p[5][a]= x[i][18].asFloat.min(limiter); //F4 theta median
-				p[6][a]= x[i][19].asFloat.min(limiter); //P3 theta median
-				p[7][a]= x[i][20].asFloat.min(limiter); //P4 theta median
+				p[0][a]= x[i][14].asFloat.min(limiter); //FZ theta median
+				p[1][a]= x[i][15].asFloat.min(limiter); //PZ theta median
+				p[2][a]= x[i][16].asFloat.min(limiter); //FP1 theta median
+				p[3][a]= x[i][17].asFloat.min(limiter); //FP2 theta median
+				p[4][a]= x[i][18].asFloat.min(limiter); //F3 theta median
+				p[5][a]= x[i][19].asFloat.min(limiter); //F4 theta median
+				p[6][a]= x[i][20].asFloat.min(limiter); //P3 theta median
+				p[7][a]= x[i][21].asFloat.min(limiter); //P4 theta median
 
 				p[8][a]= x[i][23].asInt; //level
 				p[9][a]= x[i][24].asInt; //current time
 				p[10][a]= x[i][25].asInt; //above nf-threshold
 
-				p[13][a]= x[i][21].asFloat.min(1); //phaseSync1 (it's amp Sync atm)
-				p[14][a]= x[i][22].asFloat.min(1); //phaseSync1 (it's amp Sync atm)
+				p[13][a]= x[i][22].asFloat.min(1); //phaseSync1 (it's amp Sync atm)
 
 				if (p[8][a]!== p[8][a-1],
 					{ if (p[8][a]!== 0,
 						{
 
 							("level: "++((p[8][a])-1)).postln;
-							b= p[9][a-5];
-							("level start: "++(a-b)).postln;
-							("level lenght: "++b++"sec").postln;
-							c= p[10][a-5];
-							("total above ~threshold: "++c++"sec").postln;
-							d= (c*100/b).asInt;
-							("above threshold: "++d++"%").postln;
+							//b= p[9][a-5];
+							//("level start: "++(a-b)).postln;
+							//("level lenght: "++b++"sec").postln;
+							//c= p[10][a-5];
+							//("total above ~threshold: "++c++"sec").postln;
+							//d= (c*100/b).asInt;
+							//("above threshold: "++d++"%").postln;
 							//[a-4] looks at downsampled matrix 4 seconds in the past;
 							// this needs to be fixed in the reward.scd file;
 
-							b.do{ |f| p[11].put((a-b)+f,d)};
+							//b.do{ |f| p[11].put((a-b)+f,d)};
 
 
 						}
@@ -129,6 +132,8 @@ s.waitForBoot{
 	}.value;
 
 
+
+});
 
 	// make an array for the nf threshold
 	p[12]= nfth ! p[0].size;
@@ -159,7 +164,7 @@ s.waitForBoot{
 
 	datasetD= [
 		p[5],p[7],
-		p[14],
+		p[13], //incorrect as p[14] needs calculating;
 		p[15]
 	];
 
