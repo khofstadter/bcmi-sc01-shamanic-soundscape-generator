@@ -3,7 +3,8 @@
 // TODO could we have one general function with more arguments?
 // TODO if bjork0 - add 0 to notes as well
 
-~forest = 0 ! 17;
+
+~forest = 0 ! 12;
 //depth,bps,bpb,bjorkdum,bjorkaccent,shamanvol,windlpf
 ~forest[0] = [0,4,16,0,0,0.01,19000];
 ~forest[1] = [1,6.6,16,7,4,0.1,13000];
@@ -16,12 +17,7 @@
 ~forest[8] = [8,5.5,8,2,0,0.4,1100];
 ~forest[9] = [9,5.4,8,4,0,0.4,900];
 ~forest[10] = [10,4.9,8,8,0,0.5,700];
-~forest[11] = [11,4.8,8,8,1,0.5,600];
-~forest[12] = [12,4.7,8,8,2,0.5,500];
-~forest[13] = [13,4.6,8,8,4,0.5,300];
-~forest[14] = [14,4.5,8,8,8,0.5,200]; //last
-~forest[15] = [15,2,4,8,3,0.5,200]; //triplets
-~forest[16] = [16,2,4,8,3,0.0,200]; //stop
+~forest[11] = [11,2,4,8,3,0.5,100,0.04,0.2,700];
 
 (
 ~forestDepth2 = { |depth,bps,bpb,bjorkdum,bjorkaccent,shamanvol,windlpf|
@@ -45,12 +41,15 @@
 			~gen.value(bpb,bjorkdum,bjorkaccent);
 			~shaman.value(bps,bpb);
 			//feedback
-			Ndef(\numbers).spawn([\buffer, ~numberBufs[(~currentForestDepth-17).abs], \amp, 0.4, \pan, 0]); //retrigger
+
+			(~currentForestDepth !== 0).if {
+				Ndef(\numbers).spawn([\buffer, ~numberBufs[(~currentForestDepth-(~forest.size-1);).abs], \amp, 0.4, \pan, 0]); //retrigger
+			}
 		};
 	}
 	)
 };
 );
 
-~forestFlow= nil ! 18;
+//~forestFlow= nil ! 18;
 ~currentForestFlowDepth= 0;

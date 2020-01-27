@@ -13,29 +13,22 @@
 change audio file location below
 
 used function for extra data:
+[~bandEnergyAvg[0],~bandEnergyAvg[1],~bandEnergyAvg[2],~bandEnergyAvg[3],~bandEnergyAvg[4],~bandEnergyAvg[5],~bandEnergyAvg[6],~bandEnergyAvg[7],~hiBandEnergy,~phaseCalcFuncVal,~currentForestDepth,~timer[0],~timer[1],~timer[2],~timer[3]]; //update DataRecord;
 
-recorder.extra=[~hiBandEnergy,~bandEnergyAvg[0],~bandEnergyAvg[1],~bandEnergyAvg[2],~bandEnergyAvg[3],~bandEnergyAvg[4],~bandEnergyAvg[5],~bandEnergyAvg[6],~bandEnergyAvg[7],~phaseSync1,~phaseSync2,~currentForestDepth,~timer[0],~timer[1],~timer[2],~timer[3]];
 
 #0 index
-#1-9 ch1-ch8 raw data
-#10-12 accel
-#13 nfth (set below manualy in var 1.5)
-#14 ch1 theta median (FZ)
-#15 ch2 theta median (PZ)
-#16 ch3 theta median (FP1)
-#17 ch4
-#18 ch5
-#19 ch6
-#20 ch7
-#21 ch8 theta median (P4)
-#22 ~phaseCalcFuncVal ?
-#23- level
-#24- timer 1 (0)
-#25- timer 2 (0)
-#26- timer 3 (0)
-#27- timer 4 (0)
-#28- timestamp1 (11:02:46.832)
-#29- timestamp2 (1569492166832)
+#1-8 ch1-ch8 raw data
+#9-11 accel
+#12-19 ch1-ch2 theta median
+#20 nf-threshold
+#21 ~phaseCalcFuncVal ?
+#22 level nb
+#23- timer 1 (0)
+#24- timer 2 (0)
+#25- timer 3 (0)
+#26- timer 4 (0)
+#27- timestamp1 (11:02:46.832)
+#28- timestamp2 (1569492166832)
 */
 
 // 1. plotting raw eeg data with .extra colums
@@ -69,54 +62,59 @@ s.waitForBoot{
 	));
 	w.focus;
 
+
 	// CHANGE THIS:
 	// need to recompile sc in case new file is plotted
 	if(x.isKindOf(Array).not, {
-		x= CSVFileReader.read("/Users/khofstadter/Library/Application Support/SuperCollider/downloaded-quarks/OpenBCI-SuperCollider/savedData/OpenBCI-RAW-2020-01-23_13-55-11_sc.txt");
+		x= CSVFileReader.read("/Users/khofstadter/Library/Application Support/SuperCollider/downloaded-quarks/OpenBCI-SuperCollider/savedData/OpenBCI-RAW-2020-01-27_22-28-58_sc.txt");
 		6.do{x.removeAt(0)};
 	});
 
-	p= 0 ! (x.size/256) ! 16;
+	p= 0 ! (x.size/255) ! 16; //255 ~ 266 (266 was too high)
+	//p= 0 ! (x.size) ! 16;
 
 	a= 0;
 	b= 0;
 	c= 0;
 	d= 0 ! 20;
 	e= 0;
+
+
 	x.size.do{|i|
 		if (x[i][0] == "0",
 			{
-				p[0][a]= x[i][14].asFloat.min(limiter); //FZ theta median
-				p[1][a]= x[i][15].asFloat.min(limiter); //PZ theta median
-				p[2][a]= x[i][16].asFloat.min(limiter); //FP1 theta median
-				p[3][a]= x[i][17].asFloat.min(limiter); //FP2 theta median
-				p[4][a]= x[i][18].asFloat.min(limiter); //F3 theta median
-				p[5][a]= x[i][19].asFloat.min(limiter); //F4 theta median
-				p[6][a]= x[i][20].asFloat.min(limiter); //P3 theta median
-				p[7][a]= x[i][21].asFloat.min(limiter); //P4 theta median
+				p[0][a]= x[i][12].asFloat.min(limiter); //FZ theta median
+				p[1][a]= x[i][13].asFloat.min(limiter); //PZ theta median
+				p[2][a]= x[i][14].asFloat.min(limiter); //FP1 theta median
+				p[3][a]= x[i][15].asFloat.min(limiter); //FP2 theta median
+				p[4][a]= x[i][16].asFloat.min(limiter); //F3 theta median
+				p[5][a]= x[i][17].asFloat.min(limiter); //F4 theta median
+				p[6][a]= x[i][18].asFloat.min(limiter); //P3 theta median
+				p[7][a]= x[i][19].asFloat.min(limiter); //P4 theta median
 
-				p[8][a]= x[i][23].asInt; //level
-				p[9][a]= x[i][24].asInt; //current time
-				p[10][a]= x[i][25].asInt; //above nf-threshold
+				p[8][a]= x[i][22].asInt; //level
+				p[9][a]= x[i][23].asInt; //current time
+				p[10][a]= x[i][24].asInt; //above nf-threshold
 
-				p[13][a]= x[i][22].asFloat.min(1); //phaseSync1 (it's amp Sync atm)
+				p[13][a]= x[i][21].asFloat.min(1); //phaseSync1 (it's amp Sync atm)
+
 
 				if (p[8][a]!== p[8][a-1],
 					{ if (p[8][a]!== 0,
 						{
 
 							("level: "++((p[8][a])-1)).postln;
-							//b= p[9][a-5];
-							//("level start: "++(a-b)).postln;
-							//("level lenght: "++b++"sec").postln;
-							//c= p[10][a-5];
-							//("total above ~threshold: "++c++"sec").postln;
-							//d= (c*100/b).asInt;
-							//("above threshold: "++d++"%").postln;
+							b= p[9][a-5];
+							("level start: "++(a-b)).postln;
+							("level lenght: "++b++"sec").postln;
+							c= p[10][a-5];
+							("total above ~threshold: "++c++"sec").postln;
+							d= (c*100/b).asInt;
+							("above threshold: "++d++"%").postln;
 							//[a-4] looks at downsampled matrix 4 seconds in the past;
 							// this needs to be fixed in the reward.scd file;
 
-							//b.do{ |f| p[11].put((a-b)+f,d)};
+							b.do{ |f| p[11].put((a-b)+f,d)};
 
 
 						}
@@ -126,6 +124,8 @@ s.waitForBoot{
 				);
 
 
+
+
 				a= a+1;
 			}
 		);
@@ -133,7 +133,7 @@ s.waitForBoot{
 
 
 
-});
+
 
 	// make an array for the nf threshold
 	p[12]= nfth ! p[0].size;
@@ -145,7 +145,7 @@ s.waitForBoot{
 
 	// the datasets to visualize
 	datasetA= [
-		p[0],
+		p[1],
 		(p[8]/3).neg,
 		((p[9]/50)+(p[8]/3)).neg,
 		((p[10]/50)+(p[8]/3)).neg,
@@ -236,15 +236,19 @@ s.waitForBoot{
 		\gridOnX, true,              // no horizontal grid
 		\gridOnY, false            // no vertical grid
 	);
+
+
 };
 )
+
+
 
 
 
 //2.playing and plotting audio
 w.read;
 //or
-w.read("~/Desktop/20191026-cambridge-festival-of-ideas/20191025/SC_191025_205331.aiff")
+w.read("/Users/khofstadter/Music/SuperCollider Recordings/SC_200127_213022.aiff")
 
 w.play  //or 'space' or doubleclick
 w.stop

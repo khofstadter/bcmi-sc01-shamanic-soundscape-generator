@@ -1,11 +1,11 @@
 //TODO plotting with audio
-- make a 10 min recording, audio and raw text;
-- try to plot;
+- signal that is used to drive NF reward needs to be adjusted in main and in plotter;
 
 //TODO better way to choose between 2 or 4 channels: perhaps two vars 1: [st~quad] 2: [test~perf] that changes all settings in all files?
 //TODO reduce nb of levels
 //TODO timer that can move between levels
 //TODO add timer that counts whole session?
+//TODO universal sound indicating level numbers/forest depths - instead of English;
 
 /*
 --------------------
@@ -107,7 +107,7 @@ s.waitForBoot {
 	t= TempoClock.new(4,16);
 };
 //s.plotTree;
-NdefMixer(s);
+//NdefMixer(s);
 )
 
 //-----------------------------
@@ -119,8 +119,9 @@ NdefMixer(s);
 (
 (
 // enter the forest
-~toThreshold= 1;
+~toThreshold= 0;
 ~threshold= 2;
+~currentForestDepth= 0;
 ~forestDepth2.valueArray(~forest[0]);//no drumming
 ~reward.play;
 
@@ -137,12 +138,12 @@ Ndef(\0).play;Ndef(\1).play;Ndef(\2).play; //digital shaman
 (
 //record raw EEG and extra data
 ~recorder= DataRecord(~openbci);
-~toThreshold= ~bandEnergyAvg[0];
+~toThreshold= ~bandEnergyAvg[1]; // select which signal will be used for classic NFT
 ~threshold= ~hiBandEnergy;
 ~rec= ~recorder.start;
 
 r= Routine.run({inf.do{
-	~rec.extra= [~hiBandEnergy,~bandEnergyAvg[0],~bandEnergyAvg[1],~bandEnergyAvg[2],~bandEnergyAvg[3],~bandEnergyAvg[4],~bandEnergyAvg[5],~bandEnergyAvg[6],~bandEnergyAvg[7],~phaseCalcFuncVal,~currentForestDepth,~timer[0],~timer[1],~timer[2],~timer[3]]; //update DataRecord;
+	~rec.extra= [~bandEnergyAvg[0],~bandEnergyAvg[1],~bandEnergyAvg[2],~bandEnergyAvg[3],~bandEnergyAvg[4],~bandEnergyAvg[5],~bandEnergyAvg[6],~bandEnergyAvg[7],~hiBandEnergy,~phaseCalcFuncVal,~currentForestDepth,~timer[0],~timer[1],~timer[2],~timer[3]]; //update DataRecord;
 	0.25.wait}});
 //r.stop;
 
@@ -159,7 +160,7 @@ r.record(numChannels:2);
 
 //-----------------------------
 //adjust threshold manually:
-~hiBandEnergy=  10.0; ~threshold= 10.0; //for plot and reward
+~hiBandEnergy=  1.3; ~threshold= 1.3; //for plot and reward
 
 //-----------------------------
 // spatialise wind2
@@ -190,12 +191,10 @@ o= Routine.run({inf.do{ |i|
 )
 
 
-
-
 //-----------------------------
 //schedule the movements in the forest:
 (
-var schedCurve= Array.geom(15, 1, 1.25).normalize(0, 600).asInt; //10 min
+var schedCurve= Array.geom(11, 1, 1.25).normalize(0, 200).asInt;
 //var schedCurve= Array.geom(15, 1, 1.25).normalize(0, 900).asInt;
 // Array.geom(15, 1, 1.25).normalize(0, 900); //15 min
 // Array.geom(15, 1, 1.25).normalize(0, 1200); //20 min
@@ -212,14 +211,9 @@ SystemClock.sched(schedCurve[6],{ ~forestDepth2.valueArray(~forest[7]);});
 SystemClock.sched(schedCurve[7],{ ~forestDepth2.valueArray(~forest[8]);});
 SystemClock.sched(schedCurve[8],{ ~forestDepth2.valueArray(~forest[9]);});
 SystemClock.sched(schedCurve[9],{ ~forestDepth2.valueArray(~forest[10]);});
-SystemClock.sched(schedCurve[10],{ ~forestDepth2.valueArray(~forest[11]);});
-SystemClock.sched(schedCurve[11],{ ~forestDepth2.valueArray(~forest[12]);});
-SystemClock.sched(schedCurve[12],{ ~forestDepth2.valueArray(~forest[13]);});
-SystemClock.sched(schedCurve[13],{ ~forestDepth2.valueArray(~forest[14]);});
-SystemClock.sched(schedCurve[14],{
-	~forestDepth2.valueArray(~forest[15]);
-	SystemClock.sched(16,{
-		~forestDepth2.valueArray(~forest[16]); //stop drums, fade out wind;
+SystemClock.sched(schedCurve[10],{ ~forestDepth2.valueArray(~forest[11]); //callback
+	SystemClock.sched(15,{ //after 15 sec - this maybe should aligned to the bar;
+		~forestDepth2.valueArray(~forest[0]); //stop drums, fade out wind;
 		~reward.stop;//stop
 		~timer = [0,0,0,0];});//reset - perhaps better to write something more distinct in here?
 });
