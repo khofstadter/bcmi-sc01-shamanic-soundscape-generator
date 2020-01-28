@@ -1,8 +1,5 @@
-
-// TODO how to play 3 ndefs together, needs grouping?
 // TODO could we have one general function with more arguments?
 // TODO if bjork0 - add 0 to notes as well
-
 
 ~forest = 0 ! 12;
 //depth,bps,bpb,bjorkdum,bjorkaccent,shamanvol,windlpf
