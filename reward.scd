@@ -1,11 +1,11 @@
 ~reward= Routine(
 	~timer= [0,0,0,0];
-	~timeThreshold= 1000; //set to 1000 as it is not used at the moment;
+	~timeThreshold= 1000; //set to 1000 as it is not used at the moment
 	~move= 0;
-	// 0: elapsed time since routine started
-	// 1: total time above ~threshold
-	// 2: current time spent above ~threshold
-	// 3: how often was ~timeThreshold met
+	//0: elapsed time since routine started
+	//1: total time above ~threshold
+	//2: current time spent above ~threshold
+	//3: how often was ~timeThreshold met
 	{inf.do{ |i|
 		~timer[0]= ~timer[0]+1;
 		(~toThreshold >= ~threshold).if {
@@ -50,4 +50,6 @@
 			~move= 0;
 		};*/
 
-		1.wait}});
+		1.wait}
+	}
+);

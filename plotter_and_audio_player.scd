@@ -2,9 +2,7 @@
 //https://github.com/krisztian-hofstadter-tedor/bcmi-soundscape-01
 //thanks to f.olofsson for adding the audio player
 
-//TODO rewrite this to simpler example for OPENBCI-SUPERCOLLIDER QUARK: no timer needed, this should follow the format example given in DataRecord.schelp and example how the extra info can be plotted;
 /*
-
 --extra data saved with DataRecord
 [~bandEnergyAvg[0],~bandEnergyAvg[1],~bandEnergyAvg[2],~bandEnergyAvg[3],~bandEnergyAvg[4],~bandEnergyAvg[5],~bandEnergyAvg[6],~bandEnergyAvg[7],~hiBandEnergy,~phaseCalcFuncVal,~currentForestDepth,~timer[0],~timer[1],~timer[2],~timer[3]];
 
@@ -28,7 +26,6 @@
 (
 s.waitForBoot{
 	var limiter= 5;
-	var nfth= 1.5;
 	var alphaColor= 100;
 
 	var plotterA, plotterB, plotterC;
@@ -56,12 +53,12 @@ s.waitForBoot{
 	//CHANGE THIS:
 	//(need to reboot interpreter in case new file is plotted)
 	if(x.isKindOf(Array).not, {
-		x= CSVFileReader.read("/Users/khofstadter/Library/Application Support/SuperCollider/downloaded-quarks/OpenBCI-SuperCollider/savedData/OpenBCI-RAW-2020-01-27_22-28-58_sc.txt");
+		x= CSVFileReader.read("/Users/khofstadter/Library/Application Support/SuperCollider/downloaded-quarks/OpenBCI-SuperCollider/savedData/OpenBCI-RAW-2020-01-28_15-16-02_sc.txt");
 		6.do{x.removeAt(0)};
 	});
 
 	//CHANGE THIS:
-	w.read("~/Music/SuperCollider Recordings/SC_200127_222858.aiff");
+	w.read("/Users/khofstadter/Music/SuperCollider Recordings/SC_200128_151602.aiff");
 
 	p= 0 ! (x.size/256) ! 16;
 
@@ -186,7 +183,6 @@ s.waitForBoot{
 	);
 };
 )
-
 
 //more for audio plotting
 w.read;

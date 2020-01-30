@@ -1,5 +1,6 @@
-//main file for bcmi-soundscapes by khofstadter 2020
+//start file for bcmi-soundscapes by khofstadter 2020
 //https://github.com/krisztian-hofstadter-tedor/bcmi-soundscape-01
+//dependency: Bjorklund quark
 
 //-----------------------------
 //read FFT
@@ -84,7 +85,7 @@ r[1].record(numChannels:2); //stereo
 
 //-----------------------------
 //adjust threshold manually:
-~hiBandEnergy=  1.3; ~threshold= 1.3; //for plot and reward
+~hiBandEnergy= (~threshold= 1.8); //for plot and reward
 
 //-----------------------------
 // spatialise sound

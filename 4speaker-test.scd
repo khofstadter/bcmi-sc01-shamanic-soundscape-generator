@@ -32,5 +32,3 @@ Synth("help-out", [\out, 3, \freq, 800]);
 
 // test 2:
 { Pan4.ar(PinkNoise.ar, FSinOsc.kr(2), FSinOsc.kr(1.2), 0.3) }.play;
-
-

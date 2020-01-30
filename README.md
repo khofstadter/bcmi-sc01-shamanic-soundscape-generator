@@ -2,13 +2,14 @@
 supercollider code for shamanic soundscape meditation
 
 //TODO test with EEG
+//TODO refine this README.md
+//TODO record 4 channel audio with 4speaker-test.scd for reference when mixing
 //TODO fine tune how ~phaseCalcFuncVal is used for sound spatialisation
 //TODO alternative to '4 ndefs.scd' files
 //TODO timer that can move between levels
 //TODO add timer to timer[0] that counts whole session
 //TODO universal sound indicating level numbers/forest depths - instead of English
 //TODO group ndefs and find mixing solution
-
 
 ## personal NFT session
 
