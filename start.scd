@@ -31,7 +31,7 @@ s.waitForBoot {
 	t= TempoClock.new(4,16);
 };
 //s.plotTree;
-NdefMixer(s);
+//NdefMixer(s);
 )
 
 //-----------------------------
@@ -46,7 +46,7 @@ NdefMixer(s);
 (
 //enter forest
 ~toThreshold= 0;
-~threshold= 2;
+~threshold= (~hiBandEnergy= 3);
 ~currentForestDepth= 0;
 ~forestDepth2.valueArray(~forest[0]);
 ~reward.play;
@@ -65,13 +65,14 @@ Ndef(\0).play;Ndef(\1).play;Ndef(\2).play; //digital shaman
 r= 0!2;
 //record raw EEG and extra data into a text file
 ~recorder= DataRecord(~openbci);
-~toThreshold= ~bandEnergyAvg[1]; //select which signal will be used for NFT
-~threshold= ~hiBandEnergy;
 ~rec= ~recorder.start;
 
 //update DataRecord extra
 r[0]= Routine.run({inf.do{
 	~rec.extra= [~bandEnergyAvg[0],~bandEnergyAvg[1],~bandEnergyAvg[2],~bandEnergyAvg[3],~bandEnergyAvg[4],~bandEnergyAvg[5],~bandEnergyAvg[6],~bandEnergyAvg[7],~hiBandEnergy,~phaseCalcFuncVal,~currentForestDepth,~timer[0],~timer[1],~timer[2],~timer[3]];
+
+~toThreshold= ~bandEnergyAvg[1]; //select which signal will be used for NFT
+
 	0.25.wait}});
 //r[0].stop;
 
@@ -85,7 +86,8 @@ r[1].record(numChannels:2); //stereo
 
 //-----------------------------
 //adjust threshold manually:
-~hiBandEnergy= (~threshold= 1.8); //for plot and reward
+~hiBandEnergy= (~threshold= 1.6).postln; ~toThreshold.postln; //for plot and reward, also plot current signal to be 'thresholded';
+
 
 //-----------------------------
 // spatialise sound

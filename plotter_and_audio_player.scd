@@ -1,6 +1,7 @@
 //plotter with audio player example for bcmi-soundscapes by khofstadter 2020
 //https://github.com/krisztian-hofstadter-tedor/bcmi-soundscape-01
 //thanks to f.olofsson for adding the audio player
+//TODO normalise audio
 
 /*
 --extra data saved with DataRecord
@@ -23,9 +24,10 @@
 */
 
 //--plotter and audio player
+// to change: links to raw text and audio file, correct data to plot;
 (
 s.waitForBoot{
-	var limiter= 5;
+	var limiter= 20;
 	var alphaColor= 100;
 
 	var plotterA, plotterB, plotterC;
@@ -43,7 +45,7 @@ s.waitForBoot{
 	var window= Window.new("Plotter Example", Rect(0,0,1024,600)).front;
 	window.view.layout_(VLayout(
 		//the plotters
-		(plotterA= Plotter("PlotterA",nil,View())).interactionView.minSize_(500@150).canFocus_(false),
+		(plotterA= Plotter("PlotterA",nil,View())).interactionView.minSize_(500@300).canFocus_(false),
 		(plotterB= Plotter("PlotterB",nil,View())).interactionView.minSize_(500@150).canFocus_(false),
 		(plotterC= Plotter("PlotterC",nil,View())).interactionView.minSize_(500@150).canFocus_(false),
 		(w= PlayFileDiskView(PlayFileDiskStereo(), controls:false)).view
@@ -53,12 +55,12 @@ s.waitForBoot{
 	//CHANGE THIS:
 	//(need to reboot interpreter in case new file is plotted)
 	if(x.isKindOf(Array).not, {
-		x= CSVFileReader.read("/Users/khofstadter/Library/Application Support/SuperCollider/downloaded-quarks/OpenBCI-SuperCollider/savedData/OpenBCI-RAW-2020-01-28_15-16-02_sc.txt");
+		x= CSVFileReader.read("/Users/khofstadter/Library/Application Support/SuperCollider/downloaded-quarks/OpenBCI-SuperCollider/savedData/OpenBCI-RAW-2020-01-31_20-55-55_sc.txt");
 		6.do{x.removeAt(0)};
 	});
 
 	//CHANGE THIS:
-	w.read("/Users/khofstadter/Music/SuperCollider Recordings/SC_200128_151602.aiff");
+	w.read("/Users/khofstadter/Music/SuperCollider Recordings/SC_200131_161125.aiff");
 
 	p= 0 ! (x.size/256) ! 16;
 
@@ -83,7 +85,7 @@ s.waitForBoot{
 				p[8][a]= x[i][22].asInt; //level
 				p[9][a]= x[i][23].asInt; //current time
 				p[10][a]= x[i][24].asInt; //above nf-threshold
-				p[12][a]= x[i][20].asInt; //threshold
+				p[12][a]= x[i][20].asFloat; //threshold
 
 				p[13][a]= x[i][21].asFloat.min(1); //~phaseCalcFuncVal
 
@@ -148,7 +150,7 @@ s.waitForBoot{
 		\gridColorX, Color.grey, //gridX color
 		//\gridColorY, Color.yellow, //gridY color
 		\gridOnX, false, //horizontal grid
-		\gridOnY, true //vertical grid
+		\gridOnY, false //vertical grid
 	);
 
 	plotterB.value_(datasetB);
@@ -187,7 +189,7 @@ s.waitForBoot{
 //more for audio plotting
 w.read;
 //or
-w.read("/Users/khofstadter/Music/SuperCollider Recordings/SC_200127_213022.aiff")
+w.read("/Users/khofstadter/Music/SuperCollider Recordings/SC_200131_205555.aiff")
 
 w.play  //or 'space' or doubleclick
 w.stop
