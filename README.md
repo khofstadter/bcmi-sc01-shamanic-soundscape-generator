@@ -1,4 +1,4 @@
-# bcmi-soundscape-01
+# bcmi-sc01-shamanic-soundscape-generator
 supercollider code for shamanic soundscape meditation
 
 //TODO test with EEG
