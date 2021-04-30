@@ -1,5 +1,5 @@
 // mic with delay and grain;
-Ndef(\live, {HPF.ar(Pan4.ar(SoundIn.ar, MouseX.kr(-1, 1), MouseY.kr(-1, 1)),50)});
+Ndef(\live, {HPF.ar(Pan4.ar(SoundIn.ar(2), MouseX.kr(-1, 1), MouseY.kr(-1, 1)),50)});
 Ndef(\delay, {|decay= 7, delHz= 0.1, delMin= 0.05, delMax= 0.8|
 	var sig= Ndef.ar(\live);
 	HPF.ar(CombC.ar(sig, 0.5, SinOsc.kr(delHz*[1, 0.9, 0.8, 0.7]).exprange(delMin, delMax), decay),50);

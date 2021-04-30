@@ -6,21 +6,25 @@
 //read FFT
 // - with coherence
 
+// select audio in
+//ServerOptions.inDevices.postln;
+
 
 //-----------------------------
 //main music files
 (
+Server.default.options.inDevice_("H1");
 Server.killAll;
 s.options.memSize = 2.pow(20); //for mome memory allocation
 //s.options.memSize;
 s.options.numOutputBusChannels= 2;
-s.options.numInputBusChannels= 0; //live input off
+s.options.numInputBusChannels= 1; //live input off/on
 s.reboot;
 s.meter;
 s.waitForBoot {
 	~pathway= thisProcess.nowExecutingPath.dirname;
 	(~pathway++"/ndefs-2ch-test.scd").load;
-	//(~pathway++"/ndefs-2ch-perf.scd").load;
+	(~pathway++"/ndefs-2ch-perf.scd").load;
 	//(~pathway++"/ndefs-4ch-test.scd").load;
 	//(~pathway++"/ndefs-4ch-perf.scd").load;
 	(~pathway++"/shaman.scd").load;
@@ -31,7 +35,7 @@ s.waitForBoot {
 	t= TempoClock.new(4,16);
 };
 //s.plotTree;
-//NdefMixer(s);
+NdefMixer(s);
 )
 
 //-----------------------------
@@ -40,7 +44,7 @@ s.waitForBoot {
 
 //-----------------------------
 //enter forest
-//and record (only with EEG date)
+//and record (only with EEG data)
 //select 'enter forest' only if no EEG data is used
 (
 (
@@ -60,7 +64,7 @@ Ndef(\numbers).play; //voice
 Ndef(\0).play;Ndef(\1).play;Ndef(\2).play; //digital shaman
 );
 
-//record (only with EEG date)
+//record (only with EEG data)
 (
 r= 0!2;
 //record raw EEG and extra data into a text file
@@ -71,7 +75,7 @@ r= 0!2;
 r[0]= Routine.run({inf.do{
 	~rec.extra= [~bandEnergyAvg[0],~bandEnergyAvg[1],~bandEnergyAvg[2],~bandEnergyAvg[3],~bandEnergyAvg[4],~bandEnergyAvg[5],~bandEnergyAvg[6],~bandEnergyAvg[7],~hiBandEnergy,~phaseCalcFuncVal,~currentForestDepth,~timer[0],~timer[1],~timer[2],~timer[3]];
 
-~toThreshold= ~bandEnergyAvg[1]; //select which signal will be used for NFT
+~toThreshold= ~bandEnergyAvg[0]; //select which signal will be used for NFT
 
 	0.25.wait}});
 //r[0].stop;
@@ -83,11 +87,20 @@ r[1].record(numChannels:2); //stereo
 )
 )
 
+//update signal sent to reward if above Routine is not executed;
+(
+g= Routine.run({inf.do{
+~toThreshold= ~bandEnergyAvg[0]; //select which signal will be used for NFT
+0.25.wait}});
+);
+
 
 //-----------------------------
 //adjust threshold manually:
-~hiBandEnergy= (~threshold= 1.6).postln; ~toThreshold.postln; //for plot and reward, also plot current signal to be 'thresholded';
+~hiBandEnergy= (~threshold= 1.5).postln;
+~toThreshold.postln; //for plot and reward, also plot current signal to be 'thresholded';
 
+~bandEnergyAvg[0];
 
 //-----------------------------
 // spatialise sound

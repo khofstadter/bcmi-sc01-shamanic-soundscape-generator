@@ -1,17 +1,25 @@
-# bcmi-soundscape-01
-supercollider code for shamanic soundscape meditation
+# BCMI-soundscape-01
+## Shamanic Soundscape Generator
 
-//TODO test with EEG
-//TODO refine this README.md
-//TODO record 4 channel audio with 4speaker-test.scd for reference when mixing
-//TODO fine tune how ~phaseCalcFuncVal is used for sound spatialisation
-//TODO alternative to '4 ndefs.scd' files
-//TODO timer that can move between levels
-//TODO add timer to timer[0] that counts whole session
-//TODO universal sound indicating level numbers/forest depths - instead of English
-//TODO group ndefs and find mixing solution
+The SuperCollider program in this repository was used with the [OpenBCI-SuperCollider Interface](https://github.com/krisztian-hofstadter-tedor/OpenBCI-SuperCollider), together as a Brain-Computer Music Interface (the BCMI-2) to test auditory entrainment with neurofeedback.
 
-## personal NFT session
+The project titled, BCMI-2 aimed to help participants create and maintain an altered state of mind, more specifically the shamanic state of mind.
+
+//TODO test with EEG  
+//TODO refine this README.md  
+//TODO record 4 channel audio with 4speaker-test.scd for reference when mixing  
+//TODO fine tune how ~phaseCalcFuncVal is used for sound spatialisation  
+//TODO alternative to '4 ndefs.scd' files  
+//TODO timer that can move between levels  
+//TODO add timer to timer[0] that counts whole session  
+//TODO universal sound indicating level numbers/forest depths - instead of English  
+//TODO group ndefs and find mixing solution  
+
+## workflow for two types of use
+
+### personal NF session
+
+(was used in neurofeedback sessions)
 
 - adjust code between 2-4 channel, and + live input performance
 
@@ -35,13 +43,13 @@ supercollider code for shamanic soundscape meditation
 	
 	(more details in 'main.scd' file)
 
----
+### NF presentation + performance
 
-## NFT presentation + performance
+(was used in public presentations e.g. https://youtu.be/lFVzwZtmecc)
 
 - adjust code between 2-4 channel, and + live input performance
 
-2-4h prior:
+1. 2-4h prior:
 - setup gear (time consuming)
 - test 4 speakers with sinwaves (performance code is 1243 instead of 1234)
 - screensaver off
@@ -54,12 +62,12 @@ supercollider code for shamanic soundscape meditation
 - test video recording and calculate light needed
 - download youtube video (m test)
 
-30min prior:
+2. 30min prior:
 - put on wet cap and test impedance
 - adjust lights in the room
 - turn on recording on camera + phone + h1 zoom
 
-1. presentation (20 min)
+3. presentation (20 min)
 - questions with orientation page
 - focus is one soundscape: shamanic journeying
 - explain one test with m (youtube video downloaded)
@@ -74,18 +82,16 @@ supercollider code for shamanic soundscape meditation
 - drawing after
 
 
-2. performance (15 min long)
+4. performance (15 min long)
 - turn wifi off;
-1. screenrecord (screen and internal mic only)
-2. with timeseries, check impedance again (adjust EEG if needed)
-3. read EEG (with fft plot + nf with coherance)
+	1. screenrecord (screen and internal mic only)
+	2. with timeseries, check impedance again (adjust EEG if needed)
+	3. read EEG (with fft plot + nf with coherance)
 
-- adjust supercollider audio to -3.1
+	- adjust supercollider audio to -3.1
 
+	3. Q/A and drawing
 
-3. Q/A and drawing
+	- limitless options for mapping eeg to sound - but it needs to be meaningful and in-line with training e.g. even timer variables that could be used for more game like rewards, musical changes
 
-- limitless options for mapping eeg to sound - but it needs to be meaningful and in-line with training e.g. even timer variables that could be used for more game like rewards, musical changes
-
-
-4. plotting with audio
+	4. plotting with audio
