@@ -35,12 +35,12 @@ The project titled, BCMI-2 aimed to help participants create and maintain an alt
 - start screen-recording [configure] iphone + internal mic, computer audio, screen
 - with 'openbci_gui_timeseries.scd' reduce impedance, close this file
 - in 'openbci_gui_fftplot_with_neurofeedback-2ch.scd', reduce 50hz noise
-- in 'main.scd': 
-	- enter the forest and start recording raw EEG and audio file; 
+- in 'main.scd':
+	- enter the forest and start recording raw EEG and audio file;
 	- check that extra is saved in text file if desired
 	- manually adjust threshold for NFT
-	- start moving inwards 
-	
+	- start moving inwards
+
 	(more details in 'main.scd' file)
 
 ### NF presentation + performance
