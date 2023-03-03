@@ -68,12 +68,14 @@ Ndef(\wind2, {|amp=0.1, panlr=0, windlpf=10000|
 });
 
 // theta
-Ndef(\theta, {|panlr=0, amp=0.025, sustain, decay|
+Ndef(\theta, {|panlr=0, amp=0.1, sustain, decay|
 	var snd;
 	snd = ClipNoise.ar(amp);
-	snd = amp * snd * EnvGen.ar(Env.perc(0.01, sustain, decay, -8), doneAction:2);
+	snd = amp * snd * EnvGen.ar(Env.perc(0.01, sustain, decay, rrand(-16,-4)), doneAction:2);
 	snd = Pan2.ar(snd,panlr);
 	snd = HPF.ar(snd, 50);
 	snd = LPF.ar(snd, 19000);
 	snd = FreeVerb.ar(snd, 0.3, 1);
 });
+
+Ndef(\theta).vol= 0.4;

@@ -25,7 +25,7 @@
 		if(bpb < 32,
 			{
 				a = nil ! (bpb/2); //first half of the paradiddle (maybe the divider can be an argument as well)
-				a.size.asInt.do{ |i|
+				a.size.asInteger.do{ |i|
 					if(i<((bpb/2)-1), //relationship between 8%3,12%5,16&7
 						{a[i] = i%2;}, //write 0 and 1 after each other
 						{a[i] = a[0];} //only write 0 from now on

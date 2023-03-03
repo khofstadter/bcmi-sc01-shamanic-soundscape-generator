@@ -20,7 +20,7 @@
 			~timer[2]= 0; //restart
 		};
 
-		~timer.postln;
+		//~timer.postln;
 
 		(~timer[3]== ~timeThreshold).if {
 			~move= 1
